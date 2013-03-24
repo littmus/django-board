@@ -1,0 +1,9 @@
+{% extends 'base.djhtml' %}
+
+{% block contents %}
+
+<div>
+	<h>Hi, It works!</h>
+</div>
+
+{% endblock %}
