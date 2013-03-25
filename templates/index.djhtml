@@ -2,8 +2,8 @@
 
 {% block contents %}
 
-<div>
-	<h>Hi, It works!</h>
-</div>
+<section id="index">
+	<b>Hi, It works!</b>
+</section>	
 
 {% endblock %}

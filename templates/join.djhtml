@@ -2,7 +2,7 @@
 
 {% block contents %}
 
-<div class="container">
+<section id="join">
 	<div class="row">
 		<div class="span8">
 			<form class="form-horizontal" id="join" method="post" action="/account/join_ok/">
@@ -12,7 +12,7 @@
 					<div class="control-group">
 						<label class="control-label" for="id"> ID </label>
 						<div class="controls">
-							<input type="text" id="id", name="id" />
+							<input type="text" id="id" name="id" />
 						</div>
 					</div>
 
@@ -20,6 +20,13 @@
 						<label class="control-label" for="password"> Password </label>
 						<div class="controls">
 							<input type="password" id="password" name="password" rel="popover" data-content="" data-original-title="" />
+						</div>
+					</div>
+
+					<div class="control-group">
+						<label class="control-label" for="name"> Name </label>
+						<div class="controls">
+							<input type="text" id="name" name="name" />
 						</div>
 					</div>
 
@@ -33,7 +40,7 @@
 						</div>
 					</div>
 
-					<div class="control-group 재상신">
+					<div class="control-group">
 						<div class="form-actions">
 							<button type="submit" class="btn btn-inverse btn-large"> Join </button>
 							<a href="/" class="btn btn-large"> Cancel </a>
@@ -43,6 +50,6 @@
 			</form>
 		</div>
 	</div>
-</div>
+</section>
 
 {% endblock %}

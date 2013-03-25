@@ -9,8 +9,8 @@
 		{% load compress %}
 		
 		{% compress css %}
-		<link rel="stylesheet" href="{{STATIC_URL}}css/bootstrap.css" type="text/css" charset="utf-8" />
-
+		<link rel="stylesheet" href="{{STATIC_URL}}css/bootstrap.css" type="text/css" />
+		<link rel="stylesheet" href="{{STATIC_URL}}css/bootstrap-responsive.min.css" type="text/css" />
 		{% block cssfiles %}
 		
 		{% endblock %}
@@ -30,7 +30,7 @@
 		<div class="navbar navbar-fixed-top">
 			<div class="navbar-inner">
 				<div class="container">
-					<a class="brand" href="#">KUICS</a>
+					<a class="brand" href="/">KUICS</a>
 					<div class="nav-collapse">
 						<ul class="nav">
 							<li class="dropdown">
@@ -52,19 +52,30 @@
 								</ul>
 							</li>
 						</ul>
-						<form class="navbar-search pull-left" action>
+						<form class="navbar-search pull-left" action="#">
 							<input type="text" class="search-query span2" placeholder="Search">
 						</form>
 
+						{% if user.is_authenticated %}
 						<ul class="nav pull-right">
-							<li>
-								<a href="#">Login</a>
+							<li class="dropdown">
+								<a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ user.last_name }} <b class="caret"></b></a>
+								<ul class="dropdown-menu">
+									<li>
+										<a href="#">Setting</a>
+										<a href="/account/logout_ok">Logout</a>
+									</li>
+								</ul>
 							</li>
-							<li class="divider-vertical"></li>
-							<li>
-								<a href="#">Join</a>
-							</li>
-						</ul>
+						</ul>						
+						{% else %}
+						<form class="navbar-form pull-right" method="post" action="/account/login_ok/">
+							<input type="text" class="span2" name="id" placeholder="ID">
+							<input type="password" class="span2" name="password" placeholder="Password">
+							<button type="submit" class="btn btn-primary">Login</button>
+							<a href="/account/join/" class="btn btn-info">Join</a>
+						</form>
+						{% endif %}
 					</div>
 				</div>
 			</div>
@@ -73,6 +84,8 @@
 		<div class="container">
 			{% block contents %}
 			{% endblock %}
+
+			<footer>© KUICS 2013 </footer>
 		</div>
 	</body>
 </html>
