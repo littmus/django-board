@@ -1,0 +1,10 @@
+{% extends 'base.djhtml' %}
+
+{% block contents %}
+
+<section id="article">
+	<h2>Title : {{ article.title }}</h2>
+	<h3>Body<br/>{{ article.body }}</h3>
+</section>
+
+{% endblock %}

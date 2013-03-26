@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<html lang="en">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,6 +11,7 @@
 		{% compress css %}
 		<link rel="stylesheet" href="{{STATIC_URL}}css/bootstrap.css" type="text/css" />
 		<link rel="stylesheet" href="{{STATIC_URL}}css/bootstrap-responsive.min.css" type="text/css" />
+		<link rel="stylesheet" href="{{STATIC_URL}}css/base.css" type="text/css" />
 		{% block cssfiles %}
 		
 		{% endblock %}
@@ -18,7 +19,7 @@
 		{% endcompress %}
 
 		{% compress js %}
-		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" charset="utf-8"></script>
+		<script type="text/javascript" src="{{STATIC_URL}}js/jquery-1.9.1.min.js" charset="utf-8"></script>
 		<script type="text/javascript" src="{{STATIC_URL}}js/bootstrap.min.js" charset="utf-8"></script>
 		
 		{% block jsfiles %}
@@ -33,24 +34,22 @@
 					<a class="brand" href="/">KUICS</a>
 					<div class="nav-collapse">
 						<ul class="nav">
-							<li class="dropdown">
-								<a href="#" class="dropdown-toggle" data-toggle="dropdown">Board <b class="caret"></b></a>
-								<ul class="dropdown-menu">
-									<li>
-										<a href="#">Free</a>
-										<a href="#">Anonymous</a>
-									</li>
-								</ul>
-							</li>
-							<li class="dropdown">
-								<a href="#" class="dropdown-toggle" data-toggle="dropdown">Study <b class="caret"></b></a>
-								<ul class="dropdown-menu">
-									<li>
-										<a href="#">C</a>
-										<a href="#">Binary</a>
-									</li>
-								</ul>
-							</li>
+							{% for category in categories %}
+
+								<li class="dropdown">
+									<a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ category.name }} <b class="caret"></b></a>
+									<ul class="dropdown-menu">
+										<li>
+											{% for board in boards %}
+												{% if category.id == board.category.id %}
+													<a href="/board/?name={{ board.name }}">{{ board.name }}</a>
+												{% endif %}
+											{% endfor %}
+										</li>
+									</ul>
+								</li>
+
+							{% endfor %}
 						</ul>
 						<form class="navbar-search pull-left" action="#">
 							<input type="text" class="search-query span2" placeholder="Search">

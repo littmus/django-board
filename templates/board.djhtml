@@ -1,0 +1,32 @@
+{% extends "base.djhtml" %}
+
+{% block contents %}
+
+<section id="board">
+	<h3>{{ board_name }} <a href="/board/article_write/?board={{ board_name }}" class="btn pull-right">Write</a></h3>
+	<table class="table">
+		<thead>
+			<tr>
+				<th>No.</th>
+				<th>Title</th>
+				<th>Write</th>
+				<th>Date</th>
+				<th>View</th>
+			</tr>
+		</thead>
+
+		<tbody>
+			{% for article in articles %}
+				<tr>
+					<td>{{ article.id }}</td>
+					<td><a href="/board/article/?a_id={{ article.id }}" >{{ article.title }}</a></td>
+					<td>{{ article.user.last_name }}</td>
+					<td>{{ article.created_at }}</td>
+					<td>0</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+</section>
+
+{% endblock %}
