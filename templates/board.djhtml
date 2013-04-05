@@ -3,7 +3,7 @@
 {% block contents %}
 
 <section id="board">
-	<h3>{{ board_name }} <a href="/board/article_write/?board={{ board_name }}" class="btn pull-right">Write</a></h3>
+	<h3>{{ board_name }} <a href="/article/write/{{ board_name }}/" class="btn pull-right">Write</a></h3>
 	<table class="table">
 		<thead>
 			<tr>
@@ -19,14 +19,22 @@
 			{% for article in articles %}
 				<tr>
 					<td>{{ article.id }}</td>
-					<td><a href="/board/article/?a_id={{ article.id }}" >{{ article.title }}</a></td>
+					<td><a href="/article/{{ article.id }}" >{{ article.title }}</a></td>
 					<td>{{ article.user.last_name }}</td>
 					<td>{{ article.created_at }}</td>
-					<td>0</td>
+					<td>{{ article.hits }}</td>
 				</tr>
 			{% endfor %}
 		</tbody>
 	</table>
+	<div class="pagination pagination-centered">
+		<ul>
+			<li><a href="#">Prev</a></li>
+			<li><a href="#">1</a></li>
+			<li><a href="#">2</a></li>
+			<li><a href="#">Next</a></li>
+		</ul>
+	</div>
 </section>
 
 {% endblock %}

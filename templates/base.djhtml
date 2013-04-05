@@ -31,7 +31,7 @@
 		<div class="navbar navbar-fixed-top">
 			<div class="navbar-inner">
 				<div class="container">
-					<a class="brand" href="/">KUICS</a>
+					<a class="brand" href="/">Library</a>
 					<div class="nav-collapse">
 						<ul class="nav">
 							{% for category in categories %}
@@ -42,7 +42,7 @@
 										<li>
 											{% for board in boards %}
 												{% if category.id == board.category.id %}
-													<a href="/board/?name={{ board.name }}">{{ board.name }}</a>
+													<a href="/board/{{ board.name }}">{{ board.name }}</a>
 												{% endif %}
 											{% endfor %}
 										</li>
@@ -62,7 +62,7 @@
 								<ul class="dropdown-menu">
 									<li>
 										<a href="#">Setting</a>
-										<a href="/account/logout_ok">Logout</a>
+										<a href="/account/logout_ok/">Logout</a>
 									</li>
 								</ul>
 							</li>
@@ -84,7 +84,7 @@
 			{% block contents %}
 			{% endblock %}
 
-			<footer>© KUICS 2013 </footer>
+			<footer>© sdw 2013 </footer>
 		</div>
 	</body>
 </html>

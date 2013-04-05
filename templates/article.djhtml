@@ -1,10 +1,58 @@
 {% extends 'base.djhtml' %}
 
+{% block cssfiles %}
+<link rel="stylesheet" href="{{STATIC_URL}}css/jquery-te-1.3.4.css" type="text/css">
+{% endblock %}
+
+{% block jsfiles %}
+<script type="text/javascript" src="{{STATIC_URL}}js/jquery-te-1.3.4.min.js" charset="utf-8"></script>
+
+<script type="text/coffeescript" src="{{STATIC_URL}}coffee/article.coffee" charset="utf-8"></script>
+{% endblock %}
+
 {% block contents %}
 
 <section id="article">
-	<h2>Title : {{ article.title }}</h2>
-	<h3>Body<br/>{{ article.body }}</h3>
+	
+	<article>
+		<header>
+			<h1>{{ article.title }}</h1>
+		</header>
+
+		<div class="lead article-body">{{ article.body|safe }}</div>
+
+	</article>
+	
+	<div class="article-controll">
+		<p class="pull-left">
+			<a href="/board/{{ article.board.name }}/" class="btn btn-inverse">List</a>
+		</p>
+		{% if article.user == user or user.is_supueruser or user.is_staff %}
+		<p class="pull-right">
+			<a href="/article/{{ article.id }}/edit/" class="btn btn-inverse">Edit</a>
+			<a href="/article/{{ article.id }}/delete/" class="btn btn-inverse">Delete</a>
+		</p>
+		{% endif %}
+	</div>
+
+	<div class="article-comments">
+		<ul id="comments">
+			<li>
+				<span>name</span>
+				<span>comment body</span>
+				<div>date</div>
+			</li>
+		</ul>
+	<div>
+
+	<form class="form-horizontal" method="post" action="/comment/write/{{article_id}}/ok/">
+		{% csrf_token %}
+
+		<textarea id="comment_body" name="comment_body" class="input-xxlarge"></textarea>
+		<p class="pull-right">
+			<button type="submit" class="btn btn-success">Post Comment</button>
+		</p>
+	</form>
 </section>
 
 {% endblock %}

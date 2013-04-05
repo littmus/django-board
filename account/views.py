@@ -85,7 +85,7 @@ def join_ok(request):
 			return HttpResponseRedirect('/')
 
 		except invalidParam as K:
-			return HttpResponse("<script> alert(\"error2\"); history.go(-1); </script>")
+			return HttpResponse("<script> alert(\"error2 " + str(invalidParam) + "\"); history.go(-1); </script>")
 
 	else:
 		return HttpResponseRedirect('/')
