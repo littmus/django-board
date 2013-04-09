@@ -1,4 +1,4 @@
-# Django settings for kuics project.
+# Django settings for django-board project.
 
 import os
 
@@ -17,7 +17,7 @@ MANAGERS = ADMINS
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': os.path.join(SITE_ROOT, 'kuics.db'),                      # Or path to database file if using sqlite3.
+        'NAME': os.path.join(SITE_ROOT, 'django-board.db'),                      # Or path to database file if using sqlite3.
         # The following settings are not used with sqlite3:
         'USER': '',
         'PASSWORD': '',
@@ -109,10 +109,10 @@ MIDDLEWARE_CLASSES = (
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'kuics.urls'
+ROOT_URLCONF = 'django-board.urls'
 
 # Python dotted path to the WSGI application used by Django's runserver.
-WSGI_APPLICATION = 'kuics.wsgi.application'
+WSGI_APPLICATION = 'django-board.wsgi.application'
 
 TEMPLATE_DIRS = (
     os.path.join(os.path.join(SITE_ROOT, '..'), 'templates'),
