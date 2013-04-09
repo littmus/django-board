@@ -1,2 +1,2 @@
-KUICS-HMPG
+django-board
 ==========
