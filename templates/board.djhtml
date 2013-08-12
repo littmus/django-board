@@ -4,6 +4,7 @@
 
 <section id="board">
 	<h3>{{ board_name }} <a href="/article/write/{{ board_name }}/" class="btn pull-right">Write</a></h3>
+
 	<table class="table">
 		<thead>
 			<tr>
@@ -16,25 +17,41 @@
 		</thead>
 
 		<tbody>
-			{% for article in articles %}
+			{% if page_current %}
+				{% for article in page_current %}
+					<tr>
+						<td>{{ article.id }}</td>
+						<td><a href="/article/{{ article.id }}" >{{ article.title }}</a></td>
+						<td>{{ article.user.last_name }}</td>
+						<td>{{ article.created_at }}</td>
+						<td>{{ article.hits }}</td>
+					</tr>
+				{% endfor %}
+			{% else %}
 				<tr>
-					<td>{{ article.id }}</td>
-					<td><a href="/article/{{ article.id }}" >{{ article.title }}</a></td>
-					<td>{{ article.user.last_name }}</td>
-					<td>{{ article.created_at }}</td>
-					<td>{{ article.hits }}</td>
+					<td colspan="5">Empty Articles</td>
 				</tr>
-			{% endfor %}
+			{% endif %}
 		</tbody>
 	</table>
-	<div class="pagination pagination-centered">
-		<ul>
-			<li><a href="#">Prev</a></li>
-			<li><a href="#">1</a></li>
-			<li><a href="#">2</a></li>
-			<li><a href="#">Next</a></li>
-		</ul>
-	</div>
+
+	{% if page_current %}
+		<div class="pagination pagination-centered">
+			<ul>
+				<li><a href="/board/{{board_name}}/">First</a></li>
+
+				{% for page_num in page_current.paginator.page_range %}
+					{% if page_num == page_current.number %}
+						<li class="active"><a href="/board/{{board_name}}/{{page_num}}">{{ page_num }}</a></li>
+					{% else %}
+						<li><a href="/board/{{board_name}}/{{page_num}}">{{ page_num }}</a></li>
+					{% endif %}
+				{% endfor %}
+
+				<li><a href="/board/{{board_name}}/{{page_current.paginator.page_range|length}}">Last</a></li>
+			</ul>
+		</div>
+	{% endif %}
 </section>
 
 {% endblock %}
