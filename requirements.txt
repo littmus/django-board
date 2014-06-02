@@ -1,3 +1,6 @@
 gunicorn==0.11.2
 django-compressor==1.3
+<<<<<<< HEAD
 django-summernote==0.5.8
+=======
+>>>>>>> c1eb6cca956641842f7a5247475921659a9ba323
