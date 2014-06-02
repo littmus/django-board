@@ -23,26 +23,25 @@
 {% block contents %}
 
 <section id="article-write">
-
-    <form class="form-horizontal" id="fileupload" method="post" action="/article/write/{{ board_name }}/ok/" enctype="multipart/form-data">
+    <form class="form" id="fileupload" method="post" action="/article/write/{{ board_id }}/ok/" enctype="multipart/form-data" role="form">
         {% csrf_token %}
         <fieldset>
             <legend>Write Article</legend>
-            <div class="control-group">
+            <div class="form-group">
                 <label class="control-label" for="title">Title</label>
-                <div class="controls">
-                    <input type="text" id="title" name="title" class="input-xxlarge" />
+                <div>
+                    <input type="text" id="title" name="title" class="form-control" />
                 </div>
             </div>
-            <div class="control-group">
+            <div class="form-group">
                 <label class="control-label" for="body">Body</label>
-                <div class="controls">
-                    <textarea id="body" name="body" class="input-xxlarge"></textarea>
+                <div>
+                    <textarea id="body" name="body" class="form-control"></textarea>
                 </div>
             </div>
-            <div class="control-group">
+            <div class="form-group">
                 <label class="control-label" for="files[]">Files</label>
-                <div class="controls">
+                <div>
                     <span class="btn btn-success fileinput-button">
                         <i class="icon-plus icon-white"></i>
                         <span>Add files</span>
@@ -55,16 +54,16 @@
                     <table class="table table-striped"></table>
                 </div>
             </div>
-            <div class="control-group">
-                <div class="controls">
-                    <label class="checkbox">
-                        <input type="checkbox" name="notice"> Notice(not work)
-                    </label>
-                    <button type="submit" class="btn btn-success">Post</button>
+            <div class="form-group">
+                <div class="checkbox">
+                    <input type="checkbox" name="notice"> Notice(not work)
                 </div>
             </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-success">Post</button>
+            </div>
         </fieldset>
-        <input type="hidden" name="board" value="{{ board_name }}">
+        <input type="hidden" name="board" value="{{ board_id }}">
     </form> 
 
 </section>

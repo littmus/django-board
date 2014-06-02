@@ -1,6 +1,12 @@
 # Django settings for django-board project.
 
 import os
+from django.conf import global_settings
+
+
+DJANGO_BOARD_SETTINGS = {
+    'SITE_TITLE': 'django-board',
+}
 
 SITE_ROOT = os.path.dirname(os.path.realpath(__file__))
 
@@ -99,6 +105,11 @@ TEMPLATE_LOADERS = (
 #     'django.template.loaders.eggs.Loader',
 )
 
+TEMPLATE_CONTEXT_PROCESSORS = global_settings.TEMPLATE_CONTEXT_PROCESSORS + (
+    'django-board.context_processors.django_board_settings',
+    'django.core.context_processors.request',
+)
+
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -134,10 +145,12 @@ INSTALLED_APPS = (
     # 'django.contrib.admindocs',
     'compressor',
     'gunicorn',
+    'django_summernote',
 
     'account',
     'board',
     'article',
+    'comment',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -172,3 +185,8 @@ LOGGING = {
 COMPRESS_PRECOMPILERS = (
     ('text/coffeescript', 'coffee --compile --stdio'),
 )
+
+SUMMERNOTE_CONFIG = {
+    'iframe': False,
+    'lang': 'ko-KR',
+}

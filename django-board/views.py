@@ -1,14 +1,13 @@
 from django.shortcuts import render
-
+from django.views.generic import TemplateView
 from board.models import *
 
-def index(request):
+class IndexView(TemplateView):
+    template_name = 'index.djhtml'
 
-    category_list = Category.objects.all()
-    board_list = Board.objects.all()
+    def get_context_data(self, **kwargs):
+        context = super(IndexView, self).get_context_data(**kwargs)
+        context['categories'] = Category.objects.all()
+        context['boards'] = Board.objects.all()
 
-    return render(request, 'index.djhtml',
-                    {
-                        'categories': category_list,
-                        'boards': board_list,
-                    })
+        return context

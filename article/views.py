@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from datetime import datetime
+
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
@@ -34,7 +36,7 @@ def article_view(request, article_id):
     else:
         return HttpResponseRedirect('/')
 
-def article_write(request, board_name):
+def article_write(request, board_id):
 
     if request.user.is_authenticated():
 
@@ -42,38 +44,44 @@ def article_write(request, board_name):
                         {
                             'categories': category_list,
                             'boards': board_list,
-                            'board_name': board_name,
+                            'board_id': board_id,
                         })
     else:
         return HttpResponseRedirect('/')
 
 @csrf_exempt
-def article_write_ok(request, board_name):
+def article_write_ok(request, board_id):
 
-    if request.user.is_authenticated():
-        
+    if request.user.is_authenticated():    
         if request.method == "POST" and request.POST.has_key('title') and request.POST.has_key('body'):
-
             title = request.POST['title']
             body = request.POST['body']
 
-            board = Board.objects.get(name = board_name)
+            board = Board.objects.get(id=board_id)
             if board is None:
                 return HttpErrorResponse("error")
             
             try:
-                article = Article(user = request.user, title = title, body = body, board = board)
+                article_pk = Article.objects.filter(board__pk=board_id).count() + 1
+                article_time = datetime.now()
+                article = Article(
+                            user = request.user, title = title, body = body,
+                            board = board, pk_in_board=article_pk,
+                            created_at = article_time, modified_at = article_time
+                )
                 article.save()
-            except:
+            except Exception as e:
+                print str(e)
                 return HttpErrorResponse("error")
 
-            return HttpResponseRedirect('/board/'+board_name+'/')
+            return HttpResponseRedirect('/board/'+board_id+'/')
 
 
         else:
             return HttpErrorResponse("error")
     else:
         return HttpErrorResponse("error")
+
 
 @csrf_exempt
 def article_delete_ok(request, article_id):
@@ -83,17 +91,17 @@ def article_delete_ok(request, article_id):
         article = Article.objects.get(id = article_id)
 
         if article is not None and article.user == request.user or request.user.is_superuser or request.user.is_staff:
-            board_name = article.board.name
+            board_id = article.board.pk
+            article.change_status('D') # or simply change status... to recover
 
-            article.delete() # or simply change status... to recover
-
-            return HttpResponseRedirect('/board/'+board_name+'/')
+            return HttpResponseRedirect('/board/%d/' % board_id)
 
         else:
             return HttpErrorResponse("error")
 
     else:
         return HttpErrorResponse("error")
+
 
 @csrf_exempt
 def article_edit(request, article_id):
@@ -103,14 +111,19 @@ def article_edit(request, article_id):
         article = Article.objects.get(id = article_id)
 
         if article is None or article.user != request.user:
-            return HttpResponse('<script> alert("error"); history.go(-1) </script>')
+            return HttpErrorResponse('')
 
-        board_name = article.board.name
+        board_id = article.board.id
 
         article.delete() # or simply change status... to recover
 
 
-        return HttpResponseRedirect('/board/'+board_name+'/')
+        return HttpResponseRedirect('/board/'+board_id+'/')
 
     else:
         return HttpErrorResponse("error")
+
+
+@csrf_exempt
+def article_edit_ok(request, article_id):
+    return None

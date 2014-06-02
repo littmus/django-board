@@ -3,7 +3,7 @@
 {% block contents %}
 
 <section id="board">
-	<h3>{{ board_name }} <a href="/article/write/{{ board_name }}/" class="btn pull-right">Write</a></h3>
+	<h3>{{ current_board.name }} <a href="/article/write/{{ current_board.id }}/" class="btn btn-default pull-right">Write</a></h3>
 
 	<table class="table">
 		<thead>
@@ -17,10 +17,10 @@
 		</thead>
 
 		<tbody>
-			{% if page_current %}
-				{% for article in page_current %}
+			{% if page_obj %}
+				{% for article in page_obj %}
 					<tr>
-						<td>{{ article.id }}</td>
+						<td>{{ article.pk_in_board }}</td>
 						<td><a href="/article/{{ article.id }}" >{{ article.title }}</a></td>
 						<td>{{ article.user.last_name }}</td>
 						<td>{{ article.created_at }}</td>
@@ -29,28 +29,27 @@
 				{% endfor %}
 			{% else %}
 				<tr>
-					<td colspan="5">Empty Articles</td>
+					<td colspan="5" class="text-center">Empty Articles</td>
 				</tr>
 			{% endif %}
 		</tbody>
 	</table>
 
-	{% if page_current %}
-		<div class="pagination pagination-centered">
-			<ul>
-				<li><a href="/board/{{board_name}}/">First</a></li>
+	{% if page_obj %}
+		<div class="text-center">
+			<ul class="pagination pagination-sm">
+				<li><a href="/board/{{current_board.id}}/">First</a></li>
 
-				{% for page_num in page_current.paginator.page_range %}
-					{% if page_num == page_current.number %}
-						<li class="active"><a href="/board/{{board_name}}/{{page_num}}">{{ page_num }}</a></li>
+				{% for page_num in page_obj.paginator.page_range %}
+					{% if page_num == page_obj.number %}
+						<li class="active"><a href="/board/{{current_board.id}}/?page={{page_num}}">{{ page_num }}</a></li>
 					{% else %}
-						<li><a href="/board/{{board_name}}/{{page_num}}">{{ page_num }}</a></li>
+						<li><a href="/board/{{current_board.id}}/?page={{page_num}}">{{ page_num }}</a></li>
 					{% endif %}
 				{% endfor %}
 
-				<li><a href="/board/{{board_name}}/{{page_current.paginator.page_range|length}}">Last</a></li>
+				<li><a href="/board/{{current_board.id}}/?page=last">Last</a></li>
 			</ul>
-		</div>
 	{% endif %}
 </section>
 
