@@ -2,128 +2,102 @@
 
 from datetime import datetime
 
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
+from django.views.generic import *
+from django.views.generic.detail import SingleObjectMixin
 from django.http import HttpResponse, HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.core.paginator import Paginator
 
 from board.models import *
 from article.models import *
 
-category_list = Category.objects.all()
-board_list = Board.objects.all()
+from article.forms import *
+#import utils
 
-def HttpErrorResponse(error):
-    return HttpResponse('<script> alert("'+ error +'"); history.go(-1); </script>')
+class ArticleObjectMixin(SingleObjectMixin):
+    model = Article
 
-def article_view(request, article_id):
+    def get_context_data(self, **kwargs):
+        context = super(ArticleObjectMixin, self).get_context_data(**kwargs)
+        context['categories'] = Category.objects.all()
+        context['boards'] = Board.objects.all()
 
-    if request.user.is_authenticated():
+        return context
 
-        article = Article.objects.get(id = article_id)
 
-        if article.user != request.user:
-            article.hits += 1
+class ArticleView(ArticleObjectMixin, ListView):
+    template_name = 'django-board/article/article.djhtml'
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object(kwargs['article_pk'])
+
+        if self.object.user != request.user:
+            self.object.hits += 1
+            self.object.save()
+
+        return super(ArticleView, self).get(request, *args, **kwargs)
+
+    def get_object(self, article_pk):
+        return get_object_or_404(Article.objects.select_related(), pk=article_pk)
+
+    def get_queryset(self):
+        return None
+   
+    
+class ArticleWriteView(ArticleObjectMixin, CreateView):
+    object = None
+    template_name = 'django-board/article/article_write.djhtml'
+            
+    def get(self, request, *args, **kwargs):
+        board = Board.objects.select_related(None).get(pk=kwargs['board_pk'])
+        form = ArticleForm(user=request.user, board=board)
+        
+        return self.render_to_response(
+                self.get_context_data(form=form, board=board)
+        )
+         
+    def post(self, request, *args, **kwargs):
+        board = Board.objects.select_related(None).get(pk=kwargs['board_pk'])
+        form = ArticleForm(user=request.user, board=board, data=request.POST)
+
+        if form.is_valid():
+            article = form.save()
+            article.modified_at = article.created_at
+            article.pk_in_board = Article.objects.filter(board__pk=board.pk).count()
             article.save()
 
-        return render(request, 'article.djhtml',
-                        {
-                            'categories': category_list,
-                            'boards': board_list,
-                            'article': article,
-                        })
-    else:
-        return HttpResponseRedirect('/')
-
-def article_write(request, board_id):
-
-    if request.user.is_authenticated():
-
-        return render(request, 'article_write.djhtml',
-                        {
-                            'categories': category_list,
-                            'boards': board_list,
-                            'board_id': board_id,
-                        })
-    else:
-        return HttpResponseRedirect('/')
-
-@csrf_exempt
-def article_write_ok(request, board_id):
-
-    if request.user.is_authenticated():    
-        if request.method == "POST" and request.POST.has_key('title') and request.POST.has_key('body'):
-            title = request.POST['title']
-            body = request.POST['body']
-
-            board = Board.objects.get(id=board_id)
-            if board is None:
-                return HttpErrorResponse("error")
-            
-            try:
-                article_pk = Article.objects.filter(board__pk=board_id).count() + 1
-                article_time = datetime.now()
-                article = Article(
-                            user = request.user, title = title, body = body,
-                            board = board, pk_in_board=article_pk,
-                            created_at = article_time, modified_at = article_time
-                )
-                article.save()
-            except Exception as e:
-                print str(e)
-                return HttpErrorResponse("error")
-
-            return HttpResponseRedirect('/board/'+board_id+'/')
-
-
+            return HttpResponseRedirect(article.get_absolute_url())
         else:
-            return HttpErrorResponse("error")
-    else:
-        return HttpErrorResponse("error")
+            super(ArticleWriteView, self).post(request, *args, **kwargs)
 
 
-@csrf_exempt
-def article_delete_ok(request, article_id):
+class ArticleEditView(ArticleWriteView):
+    model = Article
 
-    if request.user.is_authenticated():
+    def get(self, request, *args, **kwargs):
+        article = Article.objects.select_related('board').get(pk=kwargs['article_pk'])
+        form = ArticleForm(user=request.user, instance=article)
 
-        article = Article.objects.get(id = article_id)
+        return self.render_to_response(
+            self.get_context_data(form=form, board=article.board)
+        )
 
-        if article is not None and article.user == request.user or request.user.is_superuser or request.user.is_staff:
-            board_id = article.board.pk
-            article.change_status('D') # or simply change status... to recover
+    def post(self, request, *args, **kwargs):
+        article = Article.objects.select_related('board').get(pk=kwargs['article_pk'])
+        form = ArticleForm(user=request.user, data=request.POST, instance=article)
 
-            return HttpResponseRedirect('/board/%d/' % board_id)
+        if form.is_valid():
+            article = form.save()
+            article.modified_at = datetime.now()
+            article.save()
 
+            return HttpResponseRedirect(article.get_absolute_url())
         else:
-            return HttpErrorResponse("error")
-
-    else:
-        return HttpErrorResponse("error")
+            super(ArticleWriteView, self).post(request, *args, **kwargs)
 
 
-@csrf_exempt
-def article_edit(request, article_id):
+class ArticleDeleteView():
+    pass
 
-    if request.user.is_authenticated():
-
-        article = Article.objects.get(id = article_id)
-
-        if article is None or article.user != request.user:
-            return HttpErrorResponse('')
-
-        board_id = article.board.id
-
-        article.delete() # or simply change status... to recover
-
-
-        return HttpResponseRedirect('/board/'+board_id+'/')
-
-    else:
-        return HttpErrorResponse("error")
-
-
-@csrf_exempt
-def article_edit_ok(request, article_id):
-    return None

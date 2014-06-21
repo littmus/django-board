@@ -13,19 +13,17 @@ from board.models import *
 from article.models import *
 
 
-PAGE_RANGE = 5
+#PAGE_RANGE = 5
 ITEMS_PER_PAGE = 10
-
-def HttpErrorResponse(error):
-    return HttpResponse('<script> alert("'+ error +'"); history.go(-1); </script>')
 
 class BoardView(SingleObjectMixin, ListView):
     model = Article
-    paginate_by = 1
-    template_name = 'board.djhtml'
+#    paginate_by = ITEMS_PER_PAGE
+    template_name = 'django-board/board.djhtml'
     
     def get(self, request, *args, **kwargs):
         self.object = self.get_object(kwargs['board_pk'])
+        self.paginate_by = self.object.paginate_by
         return super(BoardView, self).get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
@@ -36,8 +34,7 @@ class BoardView(SingleObjectMixin, ListView):
         return context
 
     def get_object(self, board_pk):
-        return get_object_or_404(Board, pk=board_pk)
+        return get_object_or_404(Board.objects.select_related(), pk=board_pk)
 
-    def get_queryset(self): 
-        return Article.objects.filter(board__id=self.object.id).order_by('-pk')
-
+    def get_queryset(self):
+        return Article.objects.filter(board=self.object).values('id', 'pk_in_board', 'title', 'user__last_name', 'created_at', 'hits')

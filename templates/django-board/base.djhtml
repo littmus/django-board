@@ -36,6 +36,7 @@
 					<a class="navbar-brand" href="/">{{ SITE_TITLE }}</a>
                 </div>
 			    <div class="collapse navbar-collapse" id="main_nav">
+                    {% if user.is_authenticated %}
 					<ul class="nav navbar-nav">
 						{% for category in categories %}
 							<li class="dropdown">
@@ -43,7 +44,7 @@
 								<ul class="dropdown-menu">
 									<li>
 										{% for board in boards %}
-											{% if category.id == board.category.id %}
+											{% if category__id == board.category__id %}
 												<a href="/board/{{ board.id }}">{{ board.name }}</a>
 											{% endif %}
 										{% endfor %}
@@ -55,13 +56,14 @@
 					<form class="navbar-form navbar-left" role="search" action="#">
 						<input type="text" class="form-control search-query span2" placeholder="Search">
 					</form>
-
-					{% if user.is_authenticated %}
 					<ul class="nav navbar-nav navbar-right">
 						<li class="dropdown">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ user.last_name }} <b class="caret"></b></a>
 							<ul class="dropdown-menu">
 								<li>
+                                    {% if user.is_superuser %}
+                                    <a href="/admin">Admin</a>
+                                    {% endif %}
 									<a href="#">Setting</a>
 									<a href="/account/logout_ok/">Logout</a>
 								</li>

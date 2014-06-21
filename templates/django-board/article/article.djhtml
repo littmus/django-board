@@ -1,4 +1,6 @@
-{% extends 'base.djhtml' %}
+{% extends 'django-board/base.djhtml' %}
+
+{% block subtitle %} {{ article.title }} {% endblock %}
 
 {% block cssfiles %}
 <link rel="stylesheet" href="{{STATIC_URL}}css/jquery-te-1.3.4.css" type="text/css">
@@ -48,7 +50,7 @@
 		</ul>
 	</div>
 
-	<form class="form" method="post" action="/comment/write/{{article_id}}/ok/">
+	<form class="form" method="post" action="/comment/write/{{article.id}}/">
 		{% csrf_token %}
         <div class="form-group">
 		    <textarea id="comment_body" name="comment_body" class="input-xxlarge"></textarea>

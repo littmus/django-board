@@ -22,7 +22,7 @@ def join_view(request):
     if request.user.is_authenticated():
         return HttpResponseRedirect('/')
     else:
-        return render(request, 'join.djhtml')
+        return render(request, 'django-board/join.djhtml')
 
 def checkEmail(request):
 

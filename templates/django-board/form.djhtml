@@ -1,0 +1,15 @@
+{{ form.non_field_errors }}
+
+{% for field in form.hidden_fields %}
+    {{ field.errors }}
+    {{ field }}
+{% endfor %}
+
+{% for field in form.visible_fields %}
+    <div class="form-group">
+       <label class="control-label" for="{{ field.label|safe }}">{{ field.label|safe }}
+        {{ field.errors }}
+        <div>{% bootstrap_field field %}</div>
+        {{ field.help_text }}
+    </div>
+{% endfor %}

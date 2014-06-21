@@ -1,4 +1,4 @@
-{% extends "base.djhtml" %}
+{% extends "django-board/base.djhtml" %}
 
 {% block contents %}
 

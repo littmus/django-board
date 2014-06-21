@@ -1,4 +1,6 @@
-{% extends "base.djhtml" %}
+{% extends "django-board/base.djhtml" %}
+
+{% block subtitle %} {{ current_board.name }} {% endblock %}
 
 {% block contents %}
 
@@ -21,8 +23,8 @@
 				{% for article in page_obj %}
 					<tr>
 						<td>{{ article.pk_in_board }}</td>
-						<td><a href="/article/{{ article.id }}" >{{ article.title }}</a></td>
-						<td>{{ article.user.last_name }}</td>
+						<td><a href="/article/{{ article.id }}/" >{{ article.title }}</a></td>
+						<td>{{ article.user__last_name }}</td>
 						<td>{{ article.created_at }}</td>
 						<td>{{ article.hits }}</td>
 					</tr>

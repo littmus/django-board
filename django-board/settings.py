@@ -1,17 +1,16 @@
-# Django settings for django-board project.
-
 import os
 from django.conf import global_settings
 
 
 DJANGO_BOARD_SETTINGS = {
+    'SITE_IP': '14.63.213.29',
     'SITE_TITLE': 'django-board',
 }
 
 SITE_ROOT = os.path.dirname(os.path.realpath(__file__))
 
 DEBUG = True
-COMPRESS_ENABLED = False
+COMPRESS_ENABLED = not DEBUG
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
@@ -34,7 +33,9 @@ DATABASES = {
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', ]
+#if not DEBUG:
+ALLOWED_HOSTS += DJANGO_BOARD_SETTINGS['SITE_IP']
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -139,13 +140,18 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
     # Uncomment the next line to enable the admin:
+    'django_admin_bootstrapped.bootstrap3',
+    'django_admin_bootstrapped',
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
     'compressor',
     'gunicorn',
     'django_summernote',
+    'debug_toolbar',
+    'bootstrap3',
 
     'account',
     'board',
@@ -190,3 +196,4 @@ SUMMERNOTE_CONFIG = {
     'iframe': False,
     'lang': 'ko-KR',
 }
+
