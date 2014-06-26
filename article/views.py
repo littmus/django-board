@@ -74,11 +74,10 @@ class ArticleWriteView(ArticleObjectMixin, CreateView):
 
 
 class ArticleEditView(ArticleWriteView):
-    model = Article
-
+    
     def get(self, request, *args, **kwargs):
         article = Article.objects.select_related('board').get(pk=kwargs['article_pk'])
-        form = ArticleForm(user=request.user, instance=article)
+        form = ArticleForm(instance=article)
 
         return self.render_to_response(
             self.get_context_data(form=form, board=article.board)
@@ -86,7 +85,7 @@ class ArticleEditView(ArticleWriteView):
 
     def post(self, request, *args, **kwargs):
         article = Article.objects.select_related('board').get(pk=kwargs['article_pk'])
-        form = ArticleForm(user=request.user, data=request.POST, instance=article)
+        form = ArticleForm(data=request.POST, instance=article)
 
         if form.is_valid():
             article = form.save()

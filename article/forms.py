@@ -11,13 +11,14 @@ class ArticleForm(forms.ModelForm):
         model = Article
         fields = ('title', 'body')
 
-    def __init__(self, user, board=None, *args, **kwargs):
+    def __init__(self, user=None, board=None, *args, **kwargs):
         super(ArticleForm, self).__init__(*args, **kwargs)
-        self.user = user
 
         if isinstance(kwargs['instance'], Article):
+            self.user = kwargs['instance'].user
             self.board = kwargs['instance'].board
         else:
+            self.user = user
             self.board = board
 
         self.fields['title'].widget.attrs={'placeholder':''}
