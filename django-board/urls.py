@@ -7,6 +7,7 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     url(r'^$', IndexView.as_view(), name='index'),
+    url(r'^account/', include('account.urls')),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^article/', include('article.urls')),
     url(r'^board/', include('board.urls')),

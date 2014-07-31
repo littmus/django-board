@@ -13,12 +13,8 @@ from board.models import *
 from article.models import *
 
 
-#PAGE_RANGE = 5
-ITEMS_PER_PAGE = 10
-
 class BoardView(SingleObjectMixin, ListView):
     model = Article
-#    paginate_by = ITEMS_PER_PAGE
     template_name = 'django-board/board.djhtml'
     
     def get(self, request, *args, **kwargs):
@@ -38,3 +34,4 @@ class BoardView(SingleObjectMixin, ListView):
 
     def get_queryset(self):
         return Article.objects.filter(board=self.object).values('id', 'pk_in_board', 'title', 'user__last_name', 'created_at', 'hits')
+

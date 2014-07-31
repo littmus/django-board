@@ -6,23 +6,12 @@
 {% endblock %}
 
 {% block jsfiles %}
-<script type="text/javascript" src="{{STATIC_URL}}js/jquery.ui.widget.js" charset="utf-8"></script>
-
-<script type="text/javascript" src="{{STATIC_URL}}js/jquery-te-1.3.4.min.js" charset="utf-8"></script>
-
-<script type="text/javascript" src="{{STATIC_URL}}js/jquery.tmpl.min.js" charset="utf-8"></script>
-<script type="text/javascript" src="{{STATIC_URL}}js/jquery.iframe-transport.js" charset="utf-8"></script>
-<script type="text/javascript" src="{{STATIC_URL}}js/jquery.fileupload.js" charset="utf-8"></script>
-<script type="text/javascript" src="{{STATIC_URL}}js/jquery.fileupload-fp.js" charset="utf-8"></script>
-<script type="text/javascript" src="{{STATIC_URL}}js/jquery.fileupload-ui.js" charset="utf-8"></script>
-
-<script type="text/coffeescript" src="{{STATIC_URL}}coffee/article_write.coffee" charset="utf-8"></script>
-
 {% endblock %}
 
 {% load bootstrap3 %}
-{% block contents %}
 
+{% block contents %}
+{{ form.media }}
 <section id="article-write">
     <form class="form" id="fileupload" method="post" action="." enctype="multipart/form-data" role="form">
         {% csrf_token %}

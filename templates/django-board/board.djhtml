@@ -1,6 +1,9 @@
 {% extends "django-board/base.djhtml" %}
 
 {% block subtitle %} {{ current_board.name }} {% endblock %}
+{% block cssfiles %}
+    <link rel="stylesheet" href="{{STATIC_URL}}css/board.css" type="text/css" />
+{% endblock %}
 
 {% block contents %}
 

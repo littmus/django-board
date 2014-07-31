@@ -4,13 +4,13 @@ from django.conf import global_settings
 
 DJANGO_BOARD_SETTINGS = {
     'SITE_IP': '14.63.213.29',
-    'SITE_TITLE': 'django-board',
+    'SITE_TITLE': 'KUICS',
 }
 
 SITE_ROOT = os.path.dirname(os.path.realpath(__file__))
 
 DEBUG = True
-COMPRESS_ENABLED = not DEBUG
+COMPRESS_ENABLED = False
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
@@ -194,6 +194,13 @@ COMPRESS_PRECOMPILERS = (
 
 SUMMERNOTE_CONFIG = {
     'iframe': False,
-    'lang': 'ko-KR',
+    'lang': None,
+    'inplacewidget_external_css': (
+        '//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css',
+    ),
+    'inplacewidget_external_js': (),
 }
 
+BOOTSTRAP3 = {
+    'set_placeholder': False,
+}

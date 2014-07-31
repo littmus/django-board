@@ -12,8 +12,10 @@ from django.contrib.auth.models import User
 
 from board.models import *
 from article.models import *
+from comment.models import *
 
 from article.forms import *
+from comment.forms import *
 #import utils
 
 class ArticleObjectMixin(SingleObjectMixin):
@@ -28,22 +30,26 @@ class ArticleObjectMixin(SingleObjectMixin):
 
 
 class ArticleView(ArticleObjectMixin, ListView):
+    model = Comment
     template_name = 'django-board/article/article.djhtml'
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object(kwargs['article_pk'])
-
+        self.paginate_by = 10
+        
+        comment_form = CommentForm(user=request.user, article=self.object)
+        
         if self.object.user != request.user:
             self.object.hits += 1
             self.object.save()
-
+        
         return super(ArticleView, self).get(request, *args, **kwargs)
 
     def get_object(self, article_pk):
         return get_object_or_404(Article.objects.select_related(), pk=article_pk)
 
     def get_queryset(self):
-        return None
+        return Comment.objects.filter(article=self.object).values('body', 'user__last_name', 'created_at')
    
     
 class ArticleWriteView(ArticleObjectMixin, CreateView):

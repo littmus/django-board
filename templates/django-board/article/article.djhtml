@@ -2,19 +2,14 @@
 
 {% block subtitle %} {{ article.title }} {% endblock %}
 
-{% block cssfiles %}
-<link rel="stylesheet" href="{{STATIC_URL}}css/jquery-te-1.3.4.css" type="text/css">
-{% endblock %}
-<style>
-    .article-control a {
-    }
 {% block jsfiles %}
-<script type="text/javascript" src="{{STATIC_URL}}js/jquery-te-1.3.4.min.js" charset="utf-8"></script>
 <script type="text/coffeescript" src="{{STATIC_URL}}coffee/article.coffee" charset="utf-8"></script>
 {% endblock %}
 
-{% block contents %}
+{% load bootstrap3 %}
 
+{% block contents %}
+{{ comment_form.media }}
 <section id="article">
 	<div class="panel panel-default article-control">
         <div class="panel-body">
@@ -42,19 +37,30 @@
         </div>
 
 		<ul id="comments" class="list-group">
-			<li class="list-group-item">
-				<span>name</span>
-				<span>comment body</span>
-				<div>date</div>
-			</li>
+            {% if page_obj %}
+                {% for comment in page_obj %}
+        			<li class="list-group-item">
+	    	    		<span>{{ comment.user.last_name }}</span>
+		    	    	<span>{{ comment.body }}</span>
+    		    		<div>{{ comment.created_at }}</div>
+        			</li>
+                {% endfor %}
+            {% else %}
+                <li class="list-group-item">
+                    <span>No comments.</span>
+                </li>
+            {% endif %}
 		</ul>
 	</div>
 
 	<form class="form" method="post" action="/comment/write/{{article.id}}/">
 		{% csrf_token %}
+        <!--
         <div class="form-group">
 		    <textarea id="comment_body" name="comment_body" class="input-xxlarge"></textarea>
         </div>
+        -->
+        {% bootstrap_form comment_form %}
         <div class="form-group text-right">
     		<button type="submit" class="btn btn-success">Post Comment</button>
         </div>
